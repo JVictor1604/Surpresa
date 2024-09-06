@@ -16,11 +16,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow: hidden; /* Garantir que o botão não saia da tela */
         }
 
         .container {
             position: relative;
+            width: 100%;
+            height: 100%;
         }
 
         h1 {
@@ -45,6 +47,7 @@
             background-color: #007bff;
             color: white;
             transition: all 0.3s ease;
+            position: relative; /* Necessário para a movimentação do botão */
         }
 
         .buttons button:hover {
@@ -85,6 +88,27 @@
         audio {
             display: none; /* Oculta o player de áudio */
         }
+
+        .contact-link {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            color: #dc3545; /* Cor vermelha para o texto */
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-link p {
+            margin: 0;
+            font-size: 1.2em;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .contact-link p:hover {
+            color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -116,6 +140,24 @@
             Seu navegador não suporta o elemento de áudio.
         </audio>
     </div>
+
+    <!-- Página de Finalização -->
+    <div id="final" style="display: none;">
+        <h1>Estamos Namorando!!</h1>
+        <div class="image-container">
+            <img src="https://i.redd.it/twla0fm6tjo51.jpg" alt="Nova imagem">
+        </div>
+        <div class="hearts">
+            ❤️ 💖 💕TE AMO 💘 💓 💞 💝
+        </div>
+        <div class="contact-link">
+            <p onclick="window.open('https://wa.me/5583993423813?text=Oi%2C%20quero%20falar%20com%20você!', '_blank')">Me mande uma mensagem</p>
+        </div>
+        <audio id="finalMusic" loop>
+            <source src="I_Love_You_So_(youconvert.net).mp3" type="audio/mpeg">
+            Seu navegador não suporta o elemento de áudio.
+        </audio>
+    </div>
 </div>
 
 <script>
@@ -133,22 +175,34 @@
 
     const botaoNao = document.getElementById('nao');
     const botaoSim = document.getElementById('sim');
-    const content = document.getElementById('pedido');
 
     botaoNao.addEventListener('mouseenter', () => {
-        botaoNao.style.position = 'absolute';
-        const novaPosicaoX = Math.random() * (window.innerWidth - botaoNao.offsetWidth);
-        const novaPosicaoY = Math.random() * (window.innerHeight - botaoNao.offsetHeight);
+        // Garantir que o botão "Não" não saia das bordas
+        const maxX = window.innerWidth - botaoNao.offsetWidth;
+        const maxY = window.innerHeight - botaoNao.offsetHeight;
 
+        const novaPosicaoX = Math.random() * maxX;
+        const novaPosicaoY = Math.random() * maxY;
+
+        botaoNao.style.position = 'absolute';
         botaoNao.style.left = `${novaPosicaoX}px`;
         botaoNao.style.top = `${novaPosicaoY}px`;
     });
 
     botaoSim.addEventListener('click', () => {
-        content.innerHTML = `
-            <h1>Parabéns, agora estamos namorando!</h1>
-            <div class="hearts">💖💖💖💖💖💖💖💖💖</div>
-        `;
+        document.getElementById('pedido').style.display = 'none';
+        document.getElementById('final').style.display = 'block';
+
+        // Pausar a música inicial
+        const music = document.getElementById('music');
+        music.pause();
+        music.currentTime = 0;
+
+        // Reproduzir a nova música
+        const finalMusic = document.getElementById('finalMusic');
+        finalMusic.play().catch(error => {
+            console.log('Erro ao tentar tocar a nova música:', error);
+        });
     });
 </script>
 
